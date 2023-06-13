@@ -1,7 +1,9 @@
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
-let assignment = require('./routes/assignments');
+let userRoute = require('./routes/userRoute');
+let assignmentRoute = require('./routes/assignmentRoute');
+
 require('dotenv').config();
 
 
@@ -11,7 +13,8 @@ mongoose.Promise = global.Promise;
 
 // remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud s
 // const uri = 'mongodb+srv://mb:toto@cluster0.5e6cs7n.mongodb.net/assignments?retryWrites=true&w=majority';
-const uri = process.env.DB_URL;
+const uri = process.env.DB_URL || 'mongodb+srv://user1:GTc5y34kQ9vXtORy@assignments.u9h0mom.mongodb.net/?retryWrites=true&w=majority';
+
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -45,14 +48,18 @@ let port = process.env.PORT || 8010;
 // les routes
 const prefix = '/api';
 
-app.route(prefix + '/assignments')
-  .get(assignment.getAssignments)
-  .post(assignment.postAssignment)
-  .put(assignment.updateAssignment);
+app.use(prefix + '/user',userRoute);
 
-app.route(prefix + '/assignments/:id')
-  .get(assignment.getAssignment)
-  .delete(assignment.deleteAssignment);
+app.use(prefix + '/assignments',assignmentRoute);
+
+// app.route(prefix + '/assignments')
+//   .get(assignment.getAssignments)
+//   .post(assignment.postAssignment)
+//   .put(assignment.updateAssignment);
+
+// app.route(prefix + '/assignments/:id')
+//   .get(assignment.getAssignment)
+//   .delete(assignment.deleteAssignment);
   
 
 // On démarre le serveur
