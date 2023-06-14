@@ -3,6 +3,8 @@ let app = express();
 let bodyParser = require('body-parser');
 let userRoute = require('./routes/userRoute');
 let assignmentRoute = require('./routes/assignmentRoute');
+let matiereRoute = require('./routes/matiereRoute');
+let photoRoute = require('./routes/photoRoute');
 
 require('dotenv').config();
 
@@ -25,7 +27,7 @@ mongoose.connect(uri, options)
   .then(() => {
     console.log("Connecté à la base MongoDB assignments dans le cloud !");
     console.log("at URI = " + uri);
-    console.log("vérifiez with http://localhost:8010/api/assignments que cela fonctionne")
+    console.log("vérifiez with http://localhost:8010/api/assignment que cela fonctionne")
     },
     err => {
       console.log('Erreur de connexion: ', err);
@@ -50,17 +52,12 @@ const prefix = '/api';
 
 app.use(prefix + '/user',userRoute);
 
-app.use(prefix + '/assignments',assignmentRoute);
+app.use(prefix + '/assignment',assignmentRoute);
 
-// app.route(prefix + '/assignments')
-//   .get(assignment.getAssignments)
-//   .post(assignment.postAssignment)
-//   .put(assignment.updateAssignment);
+app.use(prefix + '/matiere',matiereRoute);
 
-// app.route(prefix + '/assignments/:id')
-//   .get(assignment.getAssignment)
-//   .delete(assignment.deleteAssignment);
-  
+app.use(prefix + '/photo',photoRoute);
+
 
 // On démarre le serveur
 app.listen(port, "0.0.0.0");

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const assignmentController = require('../controllers/assignmentController');
-const verifyToken = require('../services/VerifyToken');
+const verifyToken = require('../services/verifyToken');
 
   router.get('/', verifyToken, assignmentController.getAssignments);
   router.post('/', verifyToken, assignmentController.postAssignment);

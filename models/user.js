@@ -7,7 +7,7 @@ let UserSchema = Schema({
     email: String,
     password: String,
     type: String,
-    idPhoto: Number
+    photo: String
 });
 
 module.exports = mongoose.model('users', UserSchema);

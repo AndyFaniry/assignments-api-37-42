@@ -3,13 +3,31 @@ let Schema = mongoose.Schema;
 var aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 let AssignmentSchema = Schema({
-    dateDeRendu: Date,
-    nom: String,
+    contenu: {
+        type: String,
+        required: true
+    },
+    auteur: {
+        type: Number,
+        required: true
+    },
+    matiere: {
+        type: Number,
+        required: true
+    },
     note: {
         type: Number,
-        max: 20
+        max: 20,
+        default: null
     },
-    rendu: Boolean,
+    rendu: {
+        type: Boolean,
+        default: false
+    },
+    dateDeRendu: {
+        type: Date,
+        default: null
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -16,7 +16,7 @@ function createUser (req, res, next) {
             email: req.body.email,
             password: hashedPassword,
             type: req.body.type,
-            idPhoto: req.body.photo
+            photo: req.body.photo
         }, 
         function (err, user) {
             if (err) return res.status(500).send("Impossible de créer un utilisateur")

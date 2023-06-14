@@ -32,7 +32,7 @@ function getAssignments(req, res, next) {
 function getAssignment(req, res, next){
     let assignmentId = req.params.id;
     
-    Assignment.findOne({id: assignmentId}, (err, assignment) =>{
+    Assignment.findById( assignmentId, (err, assignment) =>{
         if(err){res.send(err)}
         res.json(assignment);
     })
@@ -41,32 +41,25 @@ function getAssignment(req, res, next){
 // Ajout d'un assignment (POST)
 function postAssignment(req, res, next){
     let assignment = new Assignment();
-    assignment.nom = req.body.nom;
-    assignment.dateDeRendu = req.body.dateDeRendu;
-    assignment.rendu = req.body.rendu;
-
-    console.log("POST assignment reçu :");
-    console.log(assignment)
-
+    assignment.auteur = req.body.auteur
+    assignment.matiere = req.body.matiere
+    assignment.contenu = req.body.contenu;
     assignment.save( (err) => {
         if(err){
             res.send('cant post assignment ', err);
         }
-        res.json({ message: `${assignment.nom} saved!`})
+        res.json({ message: `${assignment._id} saved!`})
     })
 }
 
 // Update d'un assignment (PUT)
 function updateAssignment(req, res, next) {
-    console.log("UPDATE recu assignment : ");
-    console.log(req.body);
-    
     Assignment.findByIdAndUpdate(req.body._id, req.body, {new: true}, (err, assignment) => {
         if (err) {
             console.log(err);
             res.send(err)
         } else {
-          res.json({message: assignment.nom + 'updated'})
+          res.json({message: assignment._id + 'updated'})
         }
 
       // console.log('updated ', assignment)
@@ -81,7 +74,7 @@ function deleteAssignment(req, res, next) {
         if (err) {
             res.send(err);
         }
-        res.json({message: `${assignment.nom} deleted`});
+        res.json({message: `${assignment._id} deleted`});
     })
 }
 
