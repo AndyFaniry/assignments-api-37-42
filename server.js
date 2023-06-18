@@ -5,7 +5,7 @@ let userRoute = require('./routes/userRoute');
 let assignmentRoute = require('./routes/assignmentRoute');
 let matiereRoute = require('./routes/matiereRoute');
 let photoRoute = require('./routes/photoRoute');
-
+let cors = require('cors');
 require('dotenv').config();
 
 
@@ -34,12 +34,18 @@ mongoose.connect(uri, options)
     });
 
 // Pour accepter les connexions cross-domain (CORS)
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//   next();
+// });
+app.use(
+  cors({
+    origin: '*', // Replace with your allowed origin
+    allowedHeaders: ['Content-Type', 'Authorization'] // Replace with your allowed headers
+  })
+);
 
 // Pour les formulaires
 app.use(bodyParser.urlencoded({extended: true}));

@@ -8,9 +8,9 @@ function createMatiere (req, res, next) {
     matiere.photo = req.body.photo;
     matiere.save( (err) => {
         if(err){
-            res.send('cant post matiere ', err);
+            res.status(500).send(err);
         }
-        res.json({ message: `${matiere._id} saved!`})
+        res.status(200).send({ message: `${matiere._id} saved!`});
     })
 }
 

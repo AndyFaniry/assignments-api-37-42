@@ -4,10 +4,9 @@ let Assignment = require('../models/assignment');
 function getAssignmentsSansPagination(req, res, next){
     Assignment.find((err, assignments) => {
         if(err){
-            res.send(err)
+            res.status(500).send(err);
         }
-
-        res.send(assignments);
+        res.status(200).send(assignments);
     });
 }
 
@@ -21,9 +20,9 @@ function getAssignments(req, res, next) {
       },
       (err, assignments) => {
         if (err) {
-          res.send(err);
+            res.status(500).send(err);
         }
-        res.send(assignments);
+        res.status(200).send(assignments);
       }
     );
    }
@@ -34,7 +33,7 @@ function getAssignment(req, res, next){
     
     Assignment.findById( assignmentId, (err, assignment) =>{
         if(err){res.send(err)}
-        res.json(assignment);
+        res.status(200).send(assignment);
     })
 }
 
@@ -46,9 +45,9 @@ function postAssignment(req, res, next){
     assignment.contenu = req.body.contenu;
     assignment.save( (err) => {
         if(err){
-            res.send('cant post assignment ', err);
+            res.status(500).send(err);
         }
-        res.json({ message: `${assignment._id} saved!`})
+        res.status(200).send({ message: `${assignment._id} saved!`});
     })
 }
 
@@ -56,10 +55,9 @@ function postAssignment(req, res, next){
 function updateAssignment(req, res, next) {
     Assignment.findByIdAndUpdate(req.body._id, req.body, {new: true}, (err, assignment) => {
         if (err) {
-            console.log(err);
-            res.send(err)
+            res.status(500).send(err);
         } else {
-          res.json({message: assignment._id + 'updated'})
+            res.status(200).send({message: assignment._id + 'updated'});
         }
 
       // console.log('updated ', assignment)
@@ -72,9 +70,9 @@ function deleteAssignment(req, res, next) {
 
     Assignment.findByIdAndRemove(req.params.id, (err, assignment) => {
         if (err) {
-            res.send(err);
+            res.status(500).send(err);
         }
-        res.json({message: `${assignment._id} deleted`});
+        res.status(200).send({message: `${assignment._id} deleted`});
     })
 }
 

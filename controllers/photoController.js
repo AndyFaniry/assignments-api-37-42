@@ -7,7 +7,7 @@ const upload = require("../services/upload");
 async function uploadFile (req, res) {
     upload(req, res, async (err) => {
         if (err) {
-          res.json({ msgs: err.message });
+            res.status(500).send(err);
         }
     
         const filePath = req.file.path
@@ -28,7 +28,7 @@ async function uploadFile (req, res) {
             if(err){
                 console.log(err);
             }else{
-                res.json({ message: result})
+                res.status(200).send({ message: result});
             }
         });
       });
@@ -40,8 +40,7 @@ function findPhotoByName (req, res, next) {
         if (err) return res.status(500).send("Impossible de trouver la photo.");
         if (!pht) return res.status(404).send("Aucune photo trouvée.");
         res.contentType(pht.img.contentType);
-        res.send(pht.img.data);
-        // res.status(200).send(pht);
+        res.status(200).send(pht.img.data);
     });
 };
 
