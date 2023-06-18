@@ -8,30 +8,30 @@ let AssignmentSchema = Schema({
         required: true
     },
     auteur: {
-        type: Number,
-        required: true
+        type: Schema.Types.ObjectId, 
+        ref: 'users' ,
+        required :true
     },
     matiere: {
-        type: Number,
-        required: true
+        type: Schema.Types.ObjectId, 
+        ref: 'matieres' ,
+        required : true
     },
     note: {
         type: Number,
         max: 20,
         default: null
     },
-    remarque: {
-        type: String,
-    },
-    rendu: {
-        type: Boolean,
-        default: false
-    },
-    dateDeRendu: {
+    remarque:  String,
+    dateRendu: {
         type: Date,
-        default: null
+        required : true
     },
     createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    updatedAt: {
         type: Date,
         default: Date.now
     }

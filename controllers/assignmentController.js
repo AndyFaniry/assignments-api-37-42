@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 let Assignment = require('../models/assignment');
 
 // Récupérer tous les assignments (GET)
@@ -12,7 +13,13 @@ function getAssignmentsSansPagination(req, res, next){
 }
 
 function getAssignments(req, res, next) {
-    var aggregateQuery = Assignment.aggregate();
+    var aggregateQuery = Assignment.aggregate()
+    console.log(req.query)
+    if(req.query.matiere) aggregateQuery.match({ matiere : new ObjectId(req.query.matiere)})
+    if(req.query.etudiant) aggregateQuery.match({ auteur: new ObjectId(req.query.etudiant)})
+
+    aggregateQuery.lookup({ from: "users",localField: "auteur",foreignField : "_id", as: "auteur" });
+    aggregateQuery.lookup({ from: "matieres", localField: "matiere",foreignField : "_id", as: "matiere"});
     
     Assignment.aggregatePaginate(aggregateQuery,
       {
@@ -31,7 +38,6 @@ function getAssignments(req, res, next) {
 // Récupérer un assignment par son id (GET)
 function getAssignment(req, res, next){
     let assignmentId = req.params.id;
-    
     Assignment.findById( assignmentId, (err, assignment) =>{
         if(err){res.send(err)}
         res.json(assignment);
@@ -43,7 +49,8 @@ function postAssignment(req, res, next){
     let assignment = new Assignment();
     assignment.auteur = req.body.auteur
     assignment.matiere = req.body.matiere
-    assignment.contenu = req.body.contenu;
+    assignment.nom = req.body.nom
+    assignment.dateRendu = new Date(req.body.dateRendu)
     assignment.save( (err) => {
         if(err){
             res.send('cant post assignment ', err);
@@ -54,15 +61,15 @@ function postAssignment(req, res, next){
 
 // Update d'un assignment (PUT)
 function updateAssignment(req, res, next) {
-    Assignment.findByIdAndUpdate(req.body._id, req.body, {new: true}, (err, assignment) => {
+    let asst = req.body
+    asst.dateUpdate = Date.now 
+    Assignment.findByIdAndUpdate(assignment._id, asst, {new: true}, (err, assignment) => {
         if (err) {
             console.log(err);
             res.send(err)
         } else {
           res.json({message: assignment._id + 'updated'})
         }
-
-      // console.log('updated ', assignment)
     });
 
 }

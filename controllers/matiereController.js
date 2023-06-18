@@ -1,17 +1,12 @@
+const matiere = require("../models/matiere");
 const Matiere = require("../models/matiere");
-
+const matiereService = require("../services/matiereService");
 
 function createMatiere (req, res, next) {
     let matiere = new Matiere();
-    matiere.nom = req.body.nom
-    matiere.idProf = req.body.idProf
-    matiere.photo = req.body.photo;
-    matiere.save( (err) => {
-        if(err){
-            res.send('cant post matiere ', err);
-        }
-        res.json({ message: `${matiere._id} saved!`})
-    })
+    matiereService.create(req)
+    .then(resu=>  res.json({ message: `${resu._id} saved!`}))
+    .catch(error=>{res.status(400).send(error.message);})
 }
 
 function findAllMatiere (req, res, next) {
@@ -20,6 +15,8 @@ function findAllMatiere (req, res, next) {
         res.status(200).send(matieres);
     });
 };
+
+
 
 
 function findMatiere (req, res, next) {
