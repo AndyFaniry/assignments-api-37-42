@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 let Assignment = require('../models/assignment');
+const assignment = require('../models/assignment');
 
 // Récupérer tous les assignments (GET)
 function getAssignmentsSansPagination(req, res, next){
@@ -15,14 +16,12 @@ function getAssignments(req, res, next) {
     var aggregateQuery = Assignment.aggregate()
     console.log(req.query)
     if(req.query.matiere) aggregateQuery.match({ matiere : new ObjectId(req.query.matiere)})
-    if(req.query.etudiant) aggregateQuery.match({ auteur: new ObjectId(req.query.etudiant)})
-
+    if(req.query.auteur) aggregateQuery.match({ auteur: new ObjectId(req.query.auteur)})
+    
     aggregateQuery.lookup({ from: "users",localField: "auteur",foreignField : "_id", as: "auteur" });
     aggregateQuery.lookup({ from: "matieres", localField: "matiere",foreignField : "_id", as: "matiere" , 
     "pipeline": [
-        { "$lookup": {
-          from: "users", localField: "idProf",foreignField : "_id", as: "idProf"
-        }}
+        { "$lookup": { from: "users", localField: "idProf",foreignField : "_id", as: "idProf" }}
       ],});
     
 
@@ -37,7 +36,6 @@ function getAssignments(req, res, next) {
             x.matiere.idProf = x.matiere.idProf[0]
             x.auteur = x.auteur[0]
         })
-        // console.log(assignments)
         res.send(assignments);
       })
       .catch( err => res.send(err) )
@@ -46,8 +44,7 @@ function getAssignments(req, res, next) {
 // Récupérer un assignment par son id (GET)
 function getAssignment(req, res, next){
     let assignmentId = req.params.id;
-    
-    Assignment.findById( assignmentId, (err, assignment) =>{
+    Assignment.findById(assignmentId, (err, assignment) =>{
         if(err){res.send(err)}
         res.status(200).send(assignment);
     })
@@ -62,7 +59,7 @@ function postAssignment(req, res, next){
     assignment.dateRendu = new Date(req.body.dateRendu)
     assignment.save( (err) => {
         if(err){
-            res.status(500).send(err);
+            res.status(500).send("Impossible d'enregistrer l'assignement");
         }
         res.status(200).send({ message: `${assignment._id} saved!`});
     })
@@ -72,14 +69,12 @@ function postAssignment(req, res, next){
 function updateAssignment(req, res, next) {
     let asst = req.body
     asst.dateUpdate = Date.now 
-    Assignment.findByIdAndUpdate(assignment._id, asst, {new: true}, (err, assignment) => {
+    Assignment.findByIdAndUpdate(asst._id, asst, {new: true}, (err, assignment) => {
         if (err) {
-            res.status(500).send(err);
+            res.status(500).send("Impossible de modifier l'assignement");
         } else {
             res.status(200).send({message: assignment._id + 'updated'});
         }
-
-      // console.log('updated ', assignment)
     });
 
 }
