@@ -5,7 +5,7 @@ let Schema = mongoose.Schema;
 
 let MatiereSchema = Schema({
     nom: String,
-    idProf: ObjectId,
+    idProf: { type: Schema.Types.ObjectId, ref: 'users',required : true },
     photo: String
 });
 

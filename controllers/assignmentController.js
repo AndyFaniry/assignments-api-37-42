@@ -18,25 +18,35 @@ function getAssignments(req, res, next) {
     if(req.query.etudiant) aggregateQuery.match({ auteur: new ObjectId(req.query.etudiant)})
 
     aggregateQuery.lookup({ from: "users",localField: "auteur",foreignField : "_id", as: "auteur" });
-    aggregateQuery.lookup({ from: "matieres", localField: "matiere",foreignField : "_id", as: "matiere"});
+    aggregateQuery.lookup({ from: "matieres", localField: "matiere",foreignField : "_id", as: "matiere" , 
+    "pipeline": [
+        { "$lookup": {
+          from: "users", localField: "idProf",foreignField : "_id", as: "idProf"
+        }}
+      ],});
     
+
     Assignment.aggregatePaginate(aggregateQuery,
       {
         page: parseInt(req.query.page) || 1,
         limit: parseInt(req.query.limit) || 10,
-      },
-      (err, assignments) => {
-        if (err) {
-            res.status(500).send(err);
-        }
-        res.status(200).send(assignments);
-      }
-    );
+      }) 
+      .then( assignments => {
+        assignments.docs.forEach(x => {
+            x.matiere = x.matiere[0]
+            x.matiere.idProf = x.matiere.idProf[0]
+            x.auteur = x.auteur[0]
+        })
+        // console.log(assignments)
+        res.send(assignments);
+      })
+      .catch( err => res.send(err) )
    }
    
 // Récupérer un assignment par son id (GET)
 function getAssignment(req, res, next){
     let assignmentId = req.params.id;
+    
     Assignment.findById( assignmentId, (err, assignment) =>{
         if(err){res.send(err)}
         res.status(200).send(assignment);
@@ -68,6 +78,8 @@ function updateAssignment(req, res, next) {
         } else {
             res.status(200).send({message: assignment._id + 'updated'});
         }
+
+      // console.log('updated ', assignment)
     });
 
 }

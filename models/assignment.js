@@ -31,6 +31,10 @@ let AssignmentSchema = Schema({
         type: Date,
         default: Date.now
     },
+    rendu : {
+        type : Boolean,
+        default : false
+    },
     updatedAt: {
         type: Date,
         default: Date.now
