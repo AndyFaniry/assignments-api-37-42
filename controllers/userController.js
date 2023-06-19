@@ -50,9 +50,11 @@ function createUser (req, res, next) {
   };
 
 function findAllUser (req, res, next) {
-    User.find({}, function (err, users) {
+    let query= User.find()
+    if(req.query?.type) query.where("type").equals(req.query.type)
+    query.exec({}, function (err, users) {
         if (err) return res.status(500).send("Impossible de trouver les utilisateurs.");
-        res.status(200).send(users);
+        res.status(200).send(users)
     });
 };
 
