@@ -79,6 +79,7 @@ function deleteUser (req, res, next) {
 function updateUser (req, res, next) {
     User.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, user) {
         if (err) return res.status(500).send("Impossible de modifier un utilisateur.");
+        user.password = null;
         res.status(200).send(user);
     });
 };

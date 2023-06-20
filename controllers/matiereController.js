@@ -16,7 +16,12 @@ function findAllMatiere (req, res, next) {
     });
 };
 
-
+function getMatiereByProf (req, res, next) {
+    Matiere.findOne({idProf: req.params.id}, function (err, matieres) {
+        if (err) return res.status(500).send("Impossible de trouver les matieres.");
+        res.status(200).send(matieres);
+    });
+};
 
 
 function findMatiere (req, res, next) {
@@ -44,4 +49,4 @@ function updateMatiere (req, res, next) {
 };
 
 
-module.exports = { createMatiere, findAllMatiere, findMatiere, deleteMatiere, updateMatiere }
+module.exports = { createMatiere, findAllMatiere, findMatiere, deleteMatiere, updateMatiere, getMatiereByProf }
