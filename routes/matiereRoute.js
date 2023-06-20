@@ -3,12 +3,12 @@ const router = express.Router();
 const matiereController = require('../controllers/matiereController');
 const verifyToken = require('../services/verifyToken');
 
-router.post('/' , verifyToken, matiereController.createMatiere);
+router.post('/' , matiereController.createMatiere);
 router.get('/', verifyToken , matiereController.findAllMatiere);
 router.get('/:id', matiereController.findMatiere);
 router.delete('/:id', verifyToken , matiereController.deleteMatiere);
 router.put('/:id', verifyToken , matiereController.updateMatiere);
 router.get('/etudiant/:idEtudiant',  matiereController.findAllMatiere);
-
+router.get('/prof/:id' ,verifyToken, matiereController.getMatiereByProf);
 module.exports = router 
 
