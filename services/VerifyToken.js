@@ -2,7 +2,7 @@ var jwt = require('jsonwebtoken');
 require('dotenv').config();
 const secret = process.env.secret;
 
-function verifyToken(req, res, next) {
+function VerifyToken(req, res, next) {
   var token = req.headers['authorization'];
   if (!token)
     return res.status(403).send({ auth: false, message: 'Aucun token reçu.' });
@@ -16,4 +16,4 @@ function verifyToken(req, res, next) {
   });
 }
 
-module.exports = verifyToken;
+module.exports = VerifyToken;

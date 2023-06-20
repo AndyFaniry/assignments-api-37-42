@@ -1,5 +1,5 @@
 const express = require('express');
-const verifyToken = require('../services/verifyToken');
+const VerifyToken = require('../services/VerifyToken');
 const router = express.Router();
 const photoController = require('../controllers/photoController');
 
