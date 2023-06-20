@@ -17,8 +17,6 @@ Ce projet est la partie back webService utilisé pour la gestion des assignments
     - 10 matiéres et professeurs
     - 1000 assignments 
 
-- lien vidéo démonstration :
-
 - Hébergement sur render.com  : https://assignemts-front-andy-maria-37-42.onrender.com
 Back: https://assignemts-api-andy-maria-37-42.onrender.com
 
