@@ -14,17 +14,13 @@ function getAssignmentsSansPagination(req, res, next){
 
 function getAssignments(req, res, next) {
     var aggregateQuery = Assignment.aggregate()
-    console.log(req.query)
-    if(req.query.matiere) aggregateQuery.match({ matiere : new ObjectId(req.query.matiere)})
     if(req.query.auteur) aggregateQuery.match({ auteur: new ObjectId(req.query.auteur)})
-    
     aggregateQuery.lookup({ from: "users",localField: "auteur",foreignField : "_id", as: "auteur" });
     aggregateQuery.lookup({ from: "matieres", localField: "matiere",foreignField : "_id", as: "matiere" , 
     "pipeline": [
         { "$lookup": { from: "users", localField: "idProf",foreignField : "_id", as: "idProf" }}
       ],});
-    
-
+    if(req.query.professeur) aggregateQuery.match({ "matiere.idProf._id" :  new ObjectId(req.query.professeur)})
     Assignment.aggregatePaginate(aggregateQuery,
       {
         page: parseInt(req.query.page) || 1,
